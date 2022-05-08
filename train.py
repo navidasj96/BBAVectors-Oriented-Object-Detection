@@ -5,6 +5,7 @@ import numpy as np
 import loss
 import cv2
 import func_utils
+from tqdm import tqdm
 
 
 def collater(data):
@@ -157,7 +158,7 @@ class TrainModule(object):
         else:
             self.model.eval()
         running_loss = 0.
-        for data_dict in data_loader:
+        for data_dict in tqdm(data_loader):
             for name in data_dict:
                 data_dict[name] = data_dict[name].to(device=self.device, non_blocking=True)
             if phase == 'train':
