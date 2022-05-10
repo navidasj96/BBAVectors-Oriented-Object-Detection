@@ -2,7 +2,7 @@ from .base import BaseDataset
 import os
 import cv2
 import numpy as np
-from .DOTA_devkit.ResultMerge_multi_process import mergebypoly
+from datasets.dotadevkit.dotadevkit.ops.ResultMerge import mergebypoly
 
 class DOTA(BaseDataset):
     def __init__(self, data_dir, phase, input_h=None, input_w=None, down_ratio=None):
