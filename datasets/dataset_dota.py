@@ -28,7 +28,7 @@ class DOTA(BaseDataset):
 
     def load_image(self, index):
         img_id = self.img_ids[index]
-        imgFile = os.path.join(self.image_path, img_id+'.png')
+        imgFile = os.path.join(self.image_path, img_id+'.jpg')
         assert os.path.exists(imgFile), 'image {} not existed'.format(imgFile)
         img = cv2.imread(imgFile)
         return img
