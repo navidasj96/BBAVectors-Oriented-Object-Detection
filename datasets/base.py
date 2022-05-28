@@ -6,6 +6,7 @@ import math
 from .draw_gaussian import draw_umich_gaussian, gaussian_radius
 from .transforms import random_flip, load_affine_matrix, random_crop_info, ex_box_jaccard
 from . import data_augment
+from imgaug import augmenters as iaa
 
 class BaseDataset(data.Dataset):
     def __init__(self, data_dir, phase, input_h=None, input_w=None, down_ratio=None):
@@ -113,6 +114,15 @@ class BaseDataset(data.Dataset):
 
     def processing_test(self, image, input_h, input_w):
         image = cv2.resize(image, (input_w, input_h))
+        row,col,ch= image.shape
+        mean = 0
+        var = 1
+        sigma = var**0.5
+        gauss = np.random.normal(mean,sigma,(row,col,ch))
+        gauss = gauss.reshape(row,col,ch)
+        noisy = image + gauss
+        noisy=np.clip(noisy,0,255)
+        image=noisy
         out_image = image.astype(np.float32) / 255.
         out_image = out_image - 0.5
         out_image = out_image.transpose(2, 0, 1).reshape(1, 3, input_h, input_w)
