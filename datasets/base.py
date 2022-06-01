@@ -115,13 +115,13 @@ class BaseDataset(data.Dataset):
     def processing_test(self, image, input_h, input_w):
         image = cv2.resize(image, (input_w, input_h))
 
-        gauss = np.random.normal(0,1,image.size)
-        gauss = gauss.reshape(image.shape[0],image.shape[1],image.shape[2]).astype('uint8')
+        #gauss = np.random.normal(0,1,image.size)
+        #gauss = gauss.reshape(image.shape[0],image.shape[1],image.shape[2]).astype('uint8')
         # Add the Gaussian noise to the image
-        image = cv2.add(image,gauss)
+        #image = cv2.add(image,gauss)
       
         #filter the gaussian noise
-        image = cv2.GaussianBlur(image,(9,9),0)
+        #image = cv2.GaussianBlur(image,(9,9),0)
         
         out_image = image.astype(np.float32) / 255.
         out_image = out_image - 0.5
