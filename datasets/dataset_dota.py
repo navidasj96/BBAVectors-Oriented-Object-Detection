@@ -31,13 +31,14 @@ class DOTA(BaseDataset):
         imgFile = os.path.join(self.image_path, img_id+'.jpg')
         assert os.path.exists(imgFile), 'image {} not existed'.format(imgFile)
         img = cv2.imread(imgFile)
-        gauss = np.random.normal(0,1,img.size)
-        gauss = gauss.reshape(img.shape[0],img.shape[1],img.shape[2]).astype('uint8')
+        #gauss = np.random.normal(0,1,img.size)
+        #gauss = gauss.reshape(img.shape[0],img.shape[1],img.shape[2]).astype('uint8')
         # Add the Gaussian noise to the image
-        image = cv2.add(img,gauss)
+        #image = cv2.add(img,gauss)
       
         #filter the gaussian noise
-        img = cv2.GaussianBlur(img,(9,9),0)
+        #img = cv2.GaussianBlur(img,(9,9),0)
+        #img= cv2.medianBlur(img, 3)
         
         return img
 
