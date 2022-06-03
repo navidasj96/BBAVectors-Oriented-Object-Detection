@@ -101,3 +101,26 @@ class DOTA(BaseDataset):
 
     def merge_crop_image_results(self, result_path, merge_path):
         mergebypoly(result_path, merge_path)
+        
+        
+class merg_dataset(DOTA):
+  def __init__(self,dataset1,dataset2,dataset3):
+    self.dataset1=dataset1
+    self.dataset2=dataset2
+    self.dataset3=dataset3
+
+  def __len__(self):
+    return len(self.dataset1)+len(self.dataset2)+len(self.dataset3)
+  
+  def __getitem__(self,idx):
+    member=[]
+    for item in self.dataset1:
+      member.append(item)
+
+    for item in self.dataset2:
+      member.append(item)
+
+    for item in self.dataset2:
+      member.append(item)
+
+    return member[idx]
