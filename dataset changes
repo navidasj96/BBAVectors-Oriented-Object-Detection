@@ -204,7 +204,8 @@ class BaseDataset(data.Dataset):
 
     def generate_ground_truth(self, image, annotation):
         image = np.asarray(np.clip(image, a_min=0., a_max=255.), np.float32)
-        image = self.image_distort(np.asarray(image, np.float32))
+        if self.mode=='augment':
+          image = self.image_distort(np.asarray(image, np.float32))
         image = np.asarray(np.clip(image, a_min=0., a_max=255.), np.float32)
         image = np.transpose(image / 255. - 0.5, (2, 0, 1))
 
