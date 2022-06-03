@@ -108,15 +108,23 @@ class TrainModule(object):
 
         dataset_module = self.dataset[args.dataset]
 
-        dsets = {x: dataset_module(data_dir=args.data_dir,
-                                   phase=x,
-                                   input_h=args.input_h,
-                                   input_w=args.input_w,
-                                   down_ratio=self.down_ratio)
-                 for x in self.dataset_phase[args.dataset]}
+        modes=['augment','original','noisy']
+        dset_total=[]
+        for mode_selected in modes:
+          dsets = {x: dataset_module(data_dir=args.data_dir,
+                                    phase=x,
+                                    mode=mode_selected,
+                                    input_h=args.input_h,
+                                    input_w=args.input_w,
+                                    down_ratio=self.down_ratio)
+                  for x in self.dataset_phase[args.dataset]}
+          dset_total.append(dsets)
+
+        merged=merg_dataset(dset_total[0]['train'],dset_total[1]['train'],dset_total[2]['train'])
+        merged_dataset={'train':merged}
 
         dsets_loader = {}
-        dsets_loader['train'] = torch.utils.data.DataLoader(dsets['train'],
+        dsets_loader['train'] = torch.utils.data.DataLoader(merged_dataset={'train':merged},
                                                            batch_size=args.batch_size,
                                                            shuffle=True,
                                                            num_workers=args.num_workers,
