@@ -5,9 +5,10 @@ import numpy as np
 from datasets.dotadevkit.dotadevkit.ops.ResultMerge import mergebypoly
 
 class DOTA(BaseDataset):
-    def __init__(self, data_dir, phase,mode, input_h=None, input_w=None, down_ratio=None):
+    def __init__(self, data_dir, phase,mode,index,input_h=None, input_w=None, down_ratio=None):
         super(DOTA, self).__init__(data_dir, phase,mode, input_h, input_w, down_ratio)
         self.category = ['1']
+        self.index=index
         self.color_pans = [(204,78,210)]
         self.num_classes = len(self.category)
         self.cat_ids = {cat:i for i,cat in enumerate(self.category)}
@@ -24,7 +25,7 @@ class DOTA(BaseDataset):
         with open(image_set_index_file, 'r') as f:
             lines = f.readlines()
         image_lists = [line.strip() for line in lines]
-        return image_lists
+        return image_lists[120*self.index:(120*self.index + 120)]
 
     def load_image(self, index):
         img_id = self.img_ids[index]
@@ -104,13 +105,13 @@ class DOTA(BaseDataset):
         
         
 class merg_dataset(DOTA):
-  def __init__(self,dataset1,dataset2,dataset3):
+  def __init__(self,dataset1,dataset2):
     self.dataset1=dataset1
     self.dataset2=dataset2
-    self.dataset3=dataset3
+    
 
   def __len__(self):
-    return len(self.dataset1)+len(self.dataset2)+len(self.dataset3)
+    return len(self.dataset1)+len(self.dataset2)
   
   def __getitem__(self,idx):
     member=[]
@@ -120,7 +121,6 @@ class merg_dataset(DOTA):
     for item in self.dataset2:
       member.append(item)
 
-    for item in self.dataset3:
-      member.append(item)
+    
 
     return member[idx]
