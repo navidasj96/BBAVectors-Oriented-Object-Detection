@@ -120,7 +120,7 @@ class merg_dataset(DOTA):
     for item in self.dataset2:
       member.append(item)
 
-    for item in self.dataset2:
+    for item in self.dataset3:
       member.append(item)
 
     return member[idx]
