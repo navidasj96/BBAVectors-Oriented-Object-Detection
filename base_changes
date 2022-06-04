@@ -112,16 +112,16 @@ class BaseDataset(data.Dataset):
           out_annotations['rect'] = np.asarray(out_rects, np.float32)
           out_annotations['cat'] = np.asarray(out_cat, np.uint8)
         
-        if self.mode=='original' or self.mode=='noisy':
+        if self.mode=='original':
           crop_size = np.asarray([float(image.shape[1])/2, float(image.shape[0])/2], dtype=np.float32)
           crop_size = [max(image.shape[1], image.shape[0]), max(image.shape[1], image.shape[0])]
           #no change transform matrix
           M=np.asarray([[1.0,0.,0.],[0.,1.0,0.]])
           image = cv2.warpAffine(src=image, M=M, dsize=(self.input_w, self.input_h), flags=cv2.INTER_LINEAR)
-          if self.mode=='noisy':
-            gauss = np.random.normal(0,1,(w,h,c))
-            gauss = gauss.reshape((w,h,c)).astype('uint8')
-            image = image+gauss
+          if  np.random.random()<0.5:
+            gauss = np.random.normal(0,1,(image.shape[0],image.shape[1],image.shape[2]))
+            gauss = gauss.reshape((image.shape[0],image.shape[1],image.shape[2])).astype('uint8')
+            image = cv2.add(image,gauss)
           if annotation['pts'].shape[0]:
               annotation['pts'] = np.concatenate([annotation['pts'], np.ones((annotation['pts'].shape[0], annotation['pts'].shape[1], 1))], axis=2)
               annotation['pts'] = np.matmul(annotation['pts'], np.transpose(M))
