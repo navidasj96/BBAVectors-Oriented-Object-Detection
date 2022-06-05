@@ -1,0 +1,80 @@
+from .base import BaseDataset
+import os
+import cv2
+import numpy as np
+from datasets.dotadevkit.dotadevkit.ops.ResultMerge import mergebypoly
+
+class DOTA(BaseDataset):
+    def __init__(self, data_dir, phase, input_h=None, input_w=None, down_ratio=None):
+        super(DOTA, self).__init__(data_dir, phase, input_h, input_w, down_ratio)
+        self.category = ['1']
+        self.color_pans = [(204,78,210)]
+        self.num_classes = len(self.category)
+        self.cat_ids = {cat:i for i,cat in enumerate(self.category)}
+        self.img_ids = self.load_img_ids()
+        self.image_path = os.path.join(data_dir, 'images')
+        self.label_path = os.path.join(data_dir, 'labelTxt')
+
+    def load_img_ids(self):
+        if self.phase == 'train':
+            image_set_index_file = os.path.join(self.data_dir, 'trainval.txt')
+        else:
+            image_set_index_file = os.path.join(self.data_dir, self.phase + '.txt')
+        assert os.path.exists(image_set_index_file), 'Path does not exist: {}'.format(image_set_index_file)
+        with open(image_set_index_file, 'r') as f:
+            lines = f.readlines()
+        image_lists = [line.strip() for line in lines]
+        return image_lists
+
+    def load_image(self, index):
+        img_id = self.img_ids[index]
+        imgFile = os.path.join(self.image_path, img_id+'.jpg')
+        assert os.path.exists(imgFile), 'image {} not existed'.format(imgFile)
+        img = cv2.imread(imgFile)
+        #gauss = np.random.normal(0,1,img.size)
+        #gauss = gauss.reshape(img.shape[0],img.shape[1],img.shape[2]).astype('uint8')
+        # Add the Gaussian noise to the image
+        #image = cv2.add(img,gauss)
+      
+        #filter the gaussian noise
+        #img = cv2.GaussianBlur(img,(9,9),0)
+        #img= cv2.medianBlur(img, 3)
+        
+        return img
+
+    def load_annoFolder(self, img_id):
+        return os.path.join(self.label_path, img_id+'.txt')
+
+    def load_annotation(self, index):
+        
+        with open(self.load_annoFolder(self.img_ids[index]), 'r') as f:
+          annotation=f.readlines()
+            
+        return annotation
+
+
+    def merge_crop_image_results(self, result_path, merge_path):
+        mergebypoly(result_path, merge_path)
+        
+        
+class merg_dataset(DOTA):
+  def __init__(self,dataset1,dataset2,dataset3):
+    self.dataset1=dataset1
+    self.dataset2=dataset2
+    self.dataset3=dataset3
+
+  def __len__(self):
+    return len(self.dataset1)+len(self.dataset2)+len(self.dataset3)
+  
+  def __getitem__(self,idx):
+    member=[]
+    for item in self.dataset1:
+      member.append(item)
+
+    for item in self.dataset2:
+      member.append(item)
+
+    for item in self.dataset2:
+      member.append(item)
+
+    return member[idx]
