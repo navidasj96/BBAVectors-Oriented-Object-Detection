@@ -49,14 +49,15 @@ class DOTA(BaseDataset):
     def merge_crop_image_results(self, result_path, merge_path):
         mergebypoly(result_path, merge_path)
 '''
-def load_img_ids(self):
-        if self.phase == 'train':
-            image_set_index_file = os.path.join(self.data_dir, 'trainval.txt')
+def load_image(self, index):
+        img_id = self.img_ids[index]
+        if os.path.exists(os.path.join(self.image_path, img_id+'.jpg')):
+          imgFile = os.path.join(self.image_path, img_id+'.jpg')
+        elif os.path.exists(os.path.join(self.image_path, img_id+'.png')):
+          imgFile = os.path.join(self.image_path, img_id+'.png')
         else:
-            image_set_index_file = os.path.join(self.data_dir, self.phase + '.txt')
-        assert os.path.exists(image_set_index_file), 'Path does not exist: {}'.format(image_set_index_file)
-        with open(image_set_index_file, 'r') as f:
-            lines = f.readlines()
-        image_lists = [line.strip() for line in lines]
-        return image_lists
+          assert os.path.exists(imgFile), 'image {} not existed'.format(imgFile)
+        img = cv2.imread(imgFile)
+        return img
+
         '''
