@@ -116,7 +116,7 @@ class BaseDataset(data.Dataset):
         image_h = 608 // 4
         image_w = 608 // 4
 
-        hm = np.zeros((1, image_h, image_w), dtype=np.float32)
+        hm = np.zeros((2, image_h, image_w), dtype=np.float32)
         wh = np.zeros((500, 10), dtype=np.float32)
         ## add
         cls_theta = np.zeros((500, 1), dtype=np.float32)
