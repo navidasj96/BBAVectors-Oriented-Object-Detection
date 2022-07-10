@@ -7,9 +7,12 @@ import pickle
 class DOTA(BaseDataset):
     def __init__(self, data_dir, phase, input_h=None, input_w=None, down_ratio=None):
         super(DOTA, self).__init__(data_dir, phase, input_h, input_w, down_ratio)
-        self.category = ['1'
+        self.category = [
+                         'small-vehicle',
+                         'large-vehicle'
                          ]
-        self.color_pans = [(204,78,210)]
+        self.color_pans = [(204,78,210),
+                           (0,192,255)]
         self.num_classes = len(self.category)
         self.cat_ids = {cat:i for i,cat in enumerate(self.category)}
         self.img_ids = self.load_img_ids()
@@ -29,7 +32,7 @@ class DOTA(BaseDataset):
 
     def load_image(self, index):
         img_id = self.img_ids[index]
-        imgFile = os.path.join(self.image_path, img_id+'.jpg')
+        imgFile = os.path.join(self.image_path, img_id+'.png')
         assert os.path.exists(imgFile), 'image {} not existed'.format(imgFile)
         img = cv2.imread(imgFile)
         return img
